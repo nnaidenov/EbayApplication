@@ -1,0 +1,79 @@
+﻿@model IEnumerable<EbayApplication.Web.Models.AuctionModels.AuctionDetailedViewModel>
+@{
+    ViewBag.Title = "ByUser";
+}
+
+<h2>My current auctions</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Number
+            </th>
+            <th>
+                For product
+            </th>
+            <th>
+                Started
+            </th>
+            <th>
+                Ends
+            </th>
+            <th>
+                Are you curent buyer ?
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (EbayApplication.Web.Models.AuctionModels.AuctionDetailedViewModel currentAuction in Model)
+        {
+            <tr>
+                <td>
+                    @currentAuction.Id.ToString().Substring(25, 8)
+                </td>
+
+                <td>
+                    @currentAuction.ProductName
+                </td>
+
+
+                <td>
+                    @currentAuction.DateStarted.ToString("d-MMM-yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture)
+                </td>
+
+
+                <td>
+                    @currentAuction.ExpiringDate.ToString("d-MMM-yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture)
+                </td>
+
+
+                <td>
+                    @if (currentAuction.IsFinished == true)
+                    {
+                        if (currentAuction.CurrentBuyer == User.Identity.Name)
+                        {
+                            @Html.ActionLink("Get the product", "CloseAuction", "Auctions", new { @id = currentAuction.Id }, null);
+                        }
+                        else 
+                        {
+                            @:Auction ended. Will be removed soon
+                        }
+                    }
+                    else 
+                    {
+                        if (currentAuction.CurrentBuyer == User.Identity.Name)
+                        {
+                            <button class="btn btn-success" disabled="disabled">Yes</button>
+                        }
+                        else 
+                        {
+                            @Html.ActionLink("Go to auction", "Details", "Products", new { @id = currentAuction.Product.Id }, null);  
+                        }  
+                    }
+                       
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

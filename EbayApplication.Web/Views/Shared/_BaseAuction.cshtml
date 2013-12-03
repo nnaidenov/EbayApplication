@@ -1,0 +1,99 @@
+﻿@model EbayApplication.Web.Models.AuctionModels.AuctionDetailedViewModel
+
+@if (this.ViewContext.FormContext == null)
+{
+    this.ViewContext.FormContext = new FormContext();
+}
+
+<div id="auction-panel" class="well pull-left">
+
+
+    @if (@Model.Type == EbayApplication.Models.AuctionType.Normal)
+    {
+        @Html.Partial("_NormalAuction", Model);
+       
+    }
+    else
+    {
+        @Html.Partial("_Auction", Model);
+    
+    }
+
+</div>
+
+<script>
+
+    //CountDownTimer('@Model.ExpiringDate.ToString("MM/dd/yyyy H:m ", System.Globalization.CultureInfo.InvariantCulture)', 'countdown');
+
+    function CountDownTimer(dt, id) {
+        var end = new Date(dt);
+
+        var _second = 1000;
+        var _minute = _second * 60;
+        var _hour = _minute * 60;
+        var _day = _hour * 24;
+        var timer;
+
+        function showRemaining() {
+            var now = new Date();
+            var distance = end - now;
+            if (distance < 0) {
+
+                clearInterval(timer);
+                document.getElementById(id).innerHTML = 'EXPIRED!';
+
+                return;
+            }
+            var days = Math.floor(distance / _day);
+            var hours = Math.floor((distance % _day) / _hour);
+            var minutes = Math.floor((distance % _hour) / _minute);
+            var seconds = Math.floor((distance % _minute) / _second);
+
+            document.getElementById(id).innerHTML = days + 'days ';
+            document.getElementById(id).innerHTML += hours + 'hrs ';
+            document.getElementById(id).innerHTML += minutes + 'mins ';
+            document.getElementById(id).innerHTML += seconds + 'secs';
+        }
+
+        timer = setInterval(showRemaining, 1000);
+    }
+
+</script>
+
+
+<script>
+
+
+    function displayWindow() {
+        $("#window").show();
+
+        var window = $("#window");
+
+        if (!window.data("kendoWindow")) {
+            var messageWindow = window.kendoWindow({
+                width: "300px",
+                height: "200px",
+                title: "Message",
+                resizable: false,
+                draggable: false,
+                actions: {},
+                close: updatePage
+            }).data("kendoWindow");
+
+            messageWindow.center();
+        }
+    }
+
+
+    $("#window-close-button").on("click", function () {
+        var window = $("#window").data("kendoWindow");
+
+        window.close();
+    });
+
+    function updatePage() {
+        document.location.href="/Delivery/ByUser?username=@User.Identity.Name";
+    }
+</script>
+
+
